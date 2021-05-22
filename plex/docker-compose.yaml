@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+
+  plex:
+    image: plexinc/pms-docker:latest
+    network_mode: "host"
+    environment:
+      - VERSION=docker
+    volumes:
+      - ${PLEX_DATA_DIR:-.}/data/config:/config
+      - ${PLEX_DATA_DIR:-.}/data/transcode:/transcode
+      - /mnt/plex_media:/plex_media:ro
+

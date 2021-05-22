@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      #- ${GRAFANA_DIR:-.}/grafana.ini:/etc/grafana/grafana.ini
+      # data and log dirs
+      - ${GRAFANA_DATA_DIR:-./grafana_data}/data:/var/lib/grafana
+      - ${GRAFANA_DATA_DIR:-./grafana_data}/log:/var/log/grafana
+      #- ${GRAFANA_DATA_DIR:-.}/home:/usr/share/grafana
+      #- ${GRAFANA_DATA_DIR:-.}/provisioning:/etc/grafana/provisioning
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    ports:
+      - 9090:9090
+    volumes:
+      - ${PROMETHEUS_DIR:-.}/prometheus.yml:/etc/prometheus/prometheus.yml
+      # data dirs
+      - ${PROMETHEUS_DATA_DIR:-./prometheus_data}/data:/prometheus
+    networks:
+      - monitoring
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    privileged: true
+    ports:
+      - "8888:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /dev/disk:/dev/disk:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
