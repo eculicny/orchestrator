@@ -7,3 +7,14 @@ services:
     volumes:
       - ${NAVIDROME_DATA_DIR:-.}/data:/data
       - /mnt/music:/music:ro
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.navidrome-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.navidrome-https.entrypoints: "https"
+      traefik.http.routers.navidrome-https.rule: "Host(`navidrome.${DOMAIN}`)"
+      traefik.http.routers.navidrome-https.tls: "true"
+      traefik.http.routers.navidrome-https.tls.certresolver: "myresolver"
+      traefik.http.routers.navidrome.entrypoints: "http"
+      traefik.http.routers.navidrome.middlewares: "navidrome-https-redirect"
+      traefik.http.routers.navidrome.rule: "Host(`navidrome.${YOURDOMAIN}`)"
+

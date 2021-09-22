@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  traefik-proxy:
+    image: traefik:latest
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.myresolver.acme.email=${DOMAIN_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=namecheap"
+      - "--certificatesResolvers.myresolver.acme.storage=/certs/acme.json"
+    ports:
+      - "80:80"      # The HTTP port for internal or http to https redirection
+      - "443:443"    # HTTPS traffic
+      - "8080:8080"  # The Web UI (enabled by --api.insecure=true)
+    volumes:
+      - /opt/service_data/traefik/certs/:/certs/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - NAMECHEAP_API_USER
+      - NAMECHEAP_API_KEY
+      - DOMAIN
+      - DOMAIN_EMAIL

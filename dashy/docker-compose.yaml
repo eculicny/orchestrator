@@ -4,5 +4,5 @@ services:
     build:
       context: ${DASHY_DIR:-.}
     ports:
-      - 8080:80
+      - 8880:80
 
