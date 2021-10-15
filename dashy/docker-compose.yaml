@@ -3,6 +3,20 @@ services:
   dashy:
     build:
       context: ${DASHY_DIR:-.}
+    image: dashy:latest
+    container_name: "dashy"
+    restart: unless-stopped
     ports:
       - 8880:80
-
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.dashy-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.middlewares.dashy-auth.basicauth.users: "${ADMIN}"
+      traefik.http.routers.dashy-https.entrypoints: "https"
+      traefik.http.routers.dashy-https.rule: "Host(`dashy.${DOMAIN}`)"
+      traefik.http.routers.dashy-https.tls: "true"
+      traefik.http.routers.dashy-https.tls.certresolver: "myresolver"
+      traefik.http.routers.dashy-https.middlewares: "dashy-auth"
+      traefik.http.routers.dashy.entrypoints: "http"
+      traefik.http.routers.dashy.middlewares: "dashy-https-redirect"
+      traefik.http.routers.dashy.rule: "Host(`dashy.${DOMAIN}`)"
