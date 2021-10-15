@@ -4,6 +4,9 @@ services:
         build:
             context: ${TIDDLYWIKI_DIR:-.}
             dockerfile: dockerfile.dndwiki
+        image: dndwiki:latest
+        container_name: dndwiki
+        restart: unless-stopped
         # env vars seem to make node/tiddlywiki behave weirdly depending on what file they're in
         environment:
             - TW_WIKINAME=dndwiki
@@ -16,7 +19,7 @@ services:
         labels:
             traefik.enable: "true"
             traefik.http.middlewares.dndwiki-https-redirect.redirectscheme.scheme: "https"
-            traefik.http.middlewares.dndwiki-auth.basicauth.users: "${WIKI_ADMIN}"
+            traefik.http.middlewares.dndwiki-auth.basicauth.users: "${ADMIN}"
             traefik.http.routers.dndwiki-https.entrypoints: "https"
             traefik.http.routers.dndwiki-https.rule: "Host(`dndwiki.${DOMAIN}`)"
             traefik.http.routers.dndwiki-https.tls: "true"

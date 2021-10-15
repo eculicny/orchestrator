@@ -2,6 +2,8 @@ version: "3.9"
 services:
   navidrome:
     image: deluan/navidrome:latest
+    container_name: "navidrome"
+    restart: unless-stopped
     ports:
       - "4533:4533"
     volumes:
@@ -16,5 +18,7 @@ services:
       traefik.http.routers.navidrome-https.tls.certresolver: "myresolver"
       traefik.http.routers.navidrome.entrypoints: "http"
       traefik.http.routers.navidrome.middlewares: "navidrome-https-redirect"
-      traefik.http.routers.navidrome.rule: "Host(`navidrome.${YOURDOMAIN}`)"
+      traefik.http.routers.navidrome.rule: "Host(`navidrome.${DOMAIN}`)"
+      # watchtower enabled
+      com.centurylinklabs.watchtower.enable: "true"
 
