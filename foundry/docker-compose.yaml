@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  foundry:
+    image: felddy/foundryvtt:latest
+    container_name: "foundry"
+    #hostname: my_foundry_host
+    init: true
+    restart: unless-stopped
+    volumes:
+      - ${FOUNDRY_DATA_DIR:-.}/data:/data
+    environment:
+      - FOUNDRY_PASSWORD
+      - FOUNDRY_USERNAME
+      - FOUNDRY_ADMIN_KEY
+    ports:
+      - "30000:30000"
+      #- target: 30000
+      #published: 30000
+      #protocol: tcp
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.foundry-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.foundry-https.entrypoints: "https"
+      traefik.http.routers.foundry-https.rule: "Host(`foundry.${DOMAIN}`)"
+      traefik.http.routers.foundry-https.tls: "true"
+      traefik.http.routers.foundry-https.tls.certresolver: "myresolver"
+      traefik.http.routers.foundry.entrypoints: "http"
+      traefik.http.routers.foundry.middlewares: "foundry-https-redirect"
+      traefik.http.routers.foundry.rule: "Host(`foundry.${DOMAIN}`)"
+      # watchtower enabled
+      com.centurylinklabs.watchtower.enable: "true"
+
+
