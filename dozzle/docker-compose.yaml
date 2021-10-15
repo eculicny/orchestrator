@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    restart: unless-stopped
+    environment:
+      - DOZZLE_NO_ANALYTICS=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9990:8080
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.dozzle-https-redirect.redirectscheme.scheme: "https"
+      traefik.http.middlewares.dozzle-auth.basicauth.users: "${ADMIN}"
+      traefik.http.routers.dozzle-https.entrypoints: "https"
+      traefik.http.routers.dozzle-https.rule: "Host(`dozzle.${DOMAIN}`)"
+      traefik.http.routers.dozzle-https.tls: "true"
+      traefik.http.routers.dozzle-https.tls.certresolver: "myresolver"
+      traefik.http.routers.dozzle-https.middlewares: "dozzle-auth"
+      traefik.http.routers.dozzle.entrypoints: "http"
+      traefik.http.routers.dozzle.middlewares: "dozzle-https-redirect"
+      traefik.http.routers.dozzle.rule: "Host(`dozzle.${DOMAIN}`)"
+      # watchtower enabled
+      com.centurylinklabs.watchtower.enable: "true"
