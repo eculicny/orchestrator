@@ -1,10 +1,8 @@
 #!/bin/bash
 
-export NAMECHEAP_API_KEY=$(cat ./.secrets/namecheap_api_key)
-export NAMECHEAP_API_USER=$(cat ./.secrets/namecheap_api_user)
-export DOMAIN=$(cat ./.secrets/domain)
-export DOMAIN_EMAIL=$(cat ./.secrets/domain_email)
-export WIKI_ADMIN=$(cat ./.secrets/wikiadmin)
+set -o allexport
+source .secrets/secret_vars
+set +o allexport
 
 # dashy is currently the only built container
 docker-compose --env-file .env \
@@ -14,4 +12,9 @@ docker-compose --env-file .env \
 		-f navidrome/docker-compose.yaml \
 		-f plex/docker-compose.yaml \
 		-f tiddlywiki/docker-compose.yaml \
+		-f dozzle/docker-compose.yaml \
+		-f gotify/docker-compose.yaml \
+		-f uptime-kuma/docker-compose.yaml \
+		-f foundry/docker-compose.yaml \
+		-f dndtools/docker-compose.yaml \
 		up -d
