@@ -17,4 +17,6 @@ docker-compose --env-file .env \
 		-f uptime-kuma/docker-compose.yaml \
 		-f foundry/docker-compose.yaml \
 		-f dndtools/docker-compose.yaml \
+		#-f vpnnetwork/docker-compose.yaml \
+		-f photoprism/docker-compose.yaml \
 		up -d

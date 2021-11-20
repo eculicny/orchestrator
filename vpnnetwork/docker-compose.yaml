@@ -1,0 +1,142 @@
+version: "3.9"
+services:
+  protonvpn:
+    image: ghcr.io/tprasadtp/protonvpn:latest
+    container_name: "protonvpn"
+    restart: unless-stopped
+    environment:
+      - PROTONVPN_USERNAME=sWi288_m7zKruvJLkTU.NhOZ
+      - PROTONVPN_PASSWORD=JjQQxiEA5TLmasHBamnizd0i
+      - PROTONVPN_SERVER=US
+      - PROTONVPN_TIER=2
+    ports:
+      # prowlarr
+#      - 9696:9696
+      # nzbget
+      - 6789:6789
+      # sonarr
+#      - 8989:8989
+      # radarr
+#      - 7878:7878
+      # lidarr
+#      - 8686:8686
+      # deluge
+#      - 8112:8112
+#      - 6881:6881
+#      - 6881:6881/udp
+    networks:
+      - internet
+      - vpnproxy
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    #labels:
+      # watchtower enabled
+      #com.centurylinklabs.watchtower.enable: "true"
+
+  nzbget:
+    image: linuxserver/nzbget:latest
+    container_name: nzbget
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+    volumes:
+      - ${NZB_DATA_DIR:-./nzb}/config:/config
+      - ${VPN_DOWNLOADS_DIR:-.}/downloads:/downloads
+    network_mode: service:protonvpn
+    depends_on:
+      - protonvpn
+
+#  deluge:
+#    image: linuxserver/deluge:latest
+#    container_name: deluge
+#    restart: unless-stopped
+#    environment:
+#      - TZ=UTC
+#    volumes:
+#      - ${DELUGE_DATA_DIR:-./deluge}/config:/config
+#      - ${VPN_DOWNLOADS_DIR:-.}/downloads:/downloads
+#    network_mode: service:protonvpn
+#    depends_on:
+#      - protonvpn
+
+#  prowlarr:
+#    image: linuxserver/prowlarr:1.1.1006
+#    container_name: prowlarr
+#    restart: unless-stopped
+#    environment:
+#      - TZ=UTC
+#    volumes:
+#      - ${PROWLARR_DATA_DIR:-./prowlarr}/config:/config
+#    network_mode: service:protonvpn
+#    depends_on:
+#      - protonvpn
+
+#  sonarr:
+#    image: linuxserver/sonarr:latest
+#    container_name: sonarr
+#    restart: unless-stopped
+#    environment:
+#      - TZ=UTC
+#    volumes:
+#      - ${SONARR_DATA_DIR:-./sonarr}/config:/config
+#      - /mnt/plex_media/tv_shows:/tv
+#      - "/mnt/plex_media/Web Series:/web_series"
+#      - ${VPN_DOWNLOADS_DIR:-.}/downloads:/downloads
+#    network_mode: service:protonvpn
+#    depends_on:
+#      - protonvpn
+#    labels:
+#      # watchtower enabled
+#      com.centurylinklabs.watchtower.enable: "true"
+
+#  radarr:
+#    image: linuxserver/radarr:latest
+#    container_name: radarr
+#    restart: unless-stopped
+#    environment:
+#      - TZ="Etc/UTC"
+#    volumes:
+#      - ${RADARR_DATA_DIR:-./radarr}/config:/config
+#      - ${VPN_DOWNLOADS_DIR:-.}/downloads:/downloads
+#      - "/mnt/plex_media/Comedy Specials:/comedy"
+#      - /mnt/plex_media/movies:/movies
+#    network_mode: service:protonvpn
+#    depends_on:
+#      - protonvpn
+#    labels:
+#      # watchtower enabled
+#      com.centurylinklabs.watchtower.enable: "true"
+
+#  lidarr:
+#    image: linuxserver/lidarr:latest
+#    container_name: lidarr
+#    restart: unless-stopped
+#    environment:
+#      - TZ="Etc/UTC"
+#    volumes:
+#      - ${LIDARR_DATA_DIR:-./lidarr}/config:/config
+#      - ${VPN_DOWNLOADS_DIR:-.}/downloads:/downloads
+#      - /mnt/music:/music
+#    network_mode: service:protonvpn
+#    depends_on:
+#      - protonvpn
+#    labels:
+#      # watchtower enabled
+#      com.centurylinklabs.watchtower.enable: "true"
+
+  #service
+  #  ...
+  #  depends_on:
+  #    - protonvpn
+  #  userns_mode: host
+  #  network_mode: service:protonvpn
+  #  ...
+
+  #tdarr
+
+networks:
+  internet:
+  vpnproxy:
+    internal: true  
