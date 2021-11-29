@@ -8,7 +8,6 @@ set +o allexport
 docker-compose --env-file .env \
 		-f docker-compose.traefik.yaml \
 		-f dashy/docker-compose.yaml \
-		-f monitoring/docker-compose.yaml \
 		-f navidrome/docker-compose.yaml \
 		-f plex/docker-compose.yaml \
 		-f tiddlywiki/docker-compose.yaml \
@@ -17,6 +16,6 @@ docker-compose --env-file .env \
 		-f uptime-kuma/docker-compose.yaml \
 		-f foundry/docker-compose.yaml \
 		-f dndtools/docker-compose.yaml \
-		#-f vpnnetwork/docker-compose.yaml \
+		-f vpnnetwork/docker-compose.yaml \
 		-f photoprism/docker-compose.yaml \
 		up -d
