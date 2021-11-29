@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BACKUP_DIR=/mnt/backups
+ARCHIVING_DIR=/opt/service_data/backups_temp
+DATETIME=$(date -u +'%Y%m%d_%H%M%S')
+
+printf "Creating ${ARCHIVING_DIR} if not exists\n"
+mkdir -vp $ARCHIVING_DIR
+
