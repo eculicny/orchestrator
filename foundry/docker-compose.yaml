@@ -29,6 +29,6 @@ services:
       traefik.http.routers.foundry.middlewares: "foundry-https-redirect"
       traefik.http.routers.foundry.rule: "Host(`foundry.${DOMAIN}`)"
       # watchtower enabled
-      com.centurylinklabs.watchtower.enable: "true"
+      # com.centurylinklabs.watchtower.enable: "true"
 
 
