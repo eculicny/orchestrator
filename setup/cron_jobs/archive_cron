@@ -1,2 +1,2 @@
-0 0 */7 * * /opt/orchestrator/setup/cron_jobs/archive_daily.sh
-0 0 */7 * * /opt/orchestrator/setup/cron_jobs/archive_weekly.sh
+0 0 * * * root /opt/orchestrator/setup/cron_jobs/archive_daily.sh
+0 0 */7 * * root /opt/orchestrator/setup/cron_jobs/archive_weekly.sh
