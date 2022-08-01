@@ -4,6 +4,8 @@ services:
     image: deluan/navidrome:latest
     container_name: "navidrome"
     restart: unless-stopped
+    environment:
+      ND_LOGLEVEL: debug
     ports:
       - "4533:4533"
     volumes:
